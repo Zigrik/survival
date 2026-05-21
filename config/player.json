@@ -1,0 +1,23 @@
+{
+    "start_position": {"x": 5, "y": 5},
+    "start_inventory": {
+        "wood": 5,
+        "stone": 3,
+        "berry": 5,
+        "water": 5
+    },
+    "start_stats": {
+        "hunger": 80,
+        "thirst": 80,
+        "energy": 100,
+        "attention": 100
+    },
+    "max_stats": {
+        "hunger": 100,
+        "thirst": 100,
+        "energy": 100,
+        "attention": 100
+    },
+    "carry_capacity": 50,
+    "base_harvest_speed": 1.0
+}

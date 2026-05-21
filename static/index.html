@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survival Prototype - Этап 3</title>
+    <style>
+        * { user-select: none; }
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a2a1a;
+            color: #d4e6d4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .game-container {
+            background: #2a3a2a;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        .info-panel {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            background: #1e2a1e;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .stat {
+            background: #0a1a0a;
+            padding: 5px 10px;
+            border-radius: 3px;
+            border-left: 3px solid #6a9a6a;
+        }
+        .stat-value { font-weight: bold; color: #aaffaa; }
+        .stat-bar {
+            width: 100px;
+            height: 8px;
+            background: #3a3a3a;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 3px;
+        }
+        .stat-fill {
+            height: 100%;
+            transition: width 0.3s;
+        }
+        .stat-fill.hunger { background: #ffaa66; }
+        .stat-fill.thirst { background: #66aaff; }
+        .stat-fill.energy { background: #aaff66; }
+        .stat-fill.attention { background: #ff66aa; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 50px);
+            grid-template-rows: repeat(10, 50px);
+            gap: 2px;
+            background: #0a1a0a;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .cell {
+            background: #3a5a3a;
+            border: 1px solid #5a8a5a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.1s;
+            position: relative;
+        }
+        .cell:hover { transform: scale(0.98); background: #4a6a4a; }
+        .cell.current { border: 3px solid #ffff00; box-shadow: 0 0 5px yellow; }
+        .terrain-icon { font-size: 20px; }
+        .cell-info {
+            font-size: 8px;
+            background: rgba(0,0,0,0.7);
+            padding: 2px;
+            border-radius: 2px;
+            margin-top: 2px;
+        }
+        .campfire-icon {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-size: 16px;
+            filter: drop-shadow(0 0 2px orange);
+        }
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        button {
+            background: #4a6a4a;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-family: monospace;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.1s;
+        }
+        button:hover { background: #6a8a6a; transform: scale(1.02); }
+        button:active { transform: scale(0.98); }
+        .inventory {
+            margin-top: 20px;
+            background: #1e2a1e;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .resource {
+            background: #0a1a0a;
+            padding: 5px 15px;
+            border-radius: 3px;
+        }
+        .connection-status {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 12px;
+        }
+        .controls-arrows {
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            grid-template-rows: repeat(3, 50px);
+            gap: 5px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+        .arrow-btn {
+            background: #3a5a3a;
+            font-size: 24px;
+            padding: 5px;
+        }
+        .arrow-up { grid-column: 2; grid-row: 1; }
+        .arrow-left { grid-column: 1; grid-row: 2; }
+        .arrow-down { grid-column: 2; grid-row: 3; }
+        .arrow-right { grid-column: 3; grid-row: 2; }
+        .warning { color: #ffaa66; font-size: 11px; margin-top: 10px; text-align: center; }
+        .harvest-progress {
+            background: #0a1a0a;
+            padding: 5px;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .progress-bar {
+            width: 200px;
+            height: 10px;
+            background: #3a3a3a;
+            border-radius: 5px;
+            overflow: hidden;
+            display: inline-block;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #aaff66;
+            transition: width 0.1s linear;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div class="info-panel">
+        <div class="stat">🏠 Клетка: <span id="cellPos" class="stat-value">0,0</span></div>
+        <div class="stat">🌲 Террейн: <span id="terrainType" class="stat-value">-</span></div>
+        <div class="stat">📦 Занятость: <span id="cellFill" class="stat-value">0</span>/100</div>
+        <div class="stat">👥 Игроков: <span id="playersCount" class="stat-value">0</span></div>
+        <div class="stat">🔥 Костёр: <span id="hasCampfire" class="stat-value">❌</span></div>
+    </div>
+
+    <div class="info-panel">
+        <div class="stat">
+            🍗 Голод: <span id="hunger" class="stat-value">0</span>%
+            <div class="stat-bar"><div id="hungerBar" class="stat-fill hunger" style="width:0%"></div></div>
+        </div>
+        <div class="stat">
+            💧 Жажда: <span id="thirst" class="stat-value">0</span>%
+            <div class="stat-bar"><div id="thirstBar" class="stat-fill thirst" style="width:0%"></div></div>
+        </div>
+        <div class="stat">
+            ⚡ Энергия: <span id="energy" class="stat-value">0</span>%
+            <div class="stat-bar"><div id="energyBar" class="stat-fill energy" style="width:0%"></div></div>
+        </div>
+        <div class="stat">
+            👁️ Внимание: <span id="attention" class="stat-value">0</span>%
+            <div class="stat-bar"><div id="attentionBar" class="stat-fill attention" style="width:0%"></div></div>
+        </div>
+    </div>
+
+    <div id="grid" class="grid"></div>
+
+    <div class="inventory">
+        <div class="resource">🪵 Древесина: <span id="invWood" class="stat-value">0</span></div>
+        <div class="resource">🪨 Камень: <span id="invStone" class="stat-value">0</span></div>
+        <div class="resource">🍓 Ягоды: <span id="invBerry" class="stat-value">0</span></div>
+        <div class="resource">💧 Вода: <span id="invWater" class="stat-value">0</span></div>
+    </div>
+
+    <div class="controls">
+        <button id="harvestWoodBtn">🪵 Рубить лес (3с)</button>
+        <button id="harvestStoneBtn">🪨 Добыть камень (4с)</button>
+        <button id="harvestBerryBtn">🍓 Собрать ягоды (2с)</button>
+        <button id="harvestWaterBtn">💧 Набрать воду (2с)</button>
+        <button id="buildCampfireBtn">🔥 Костёр (5 дер)</button>
+        <button id="eatBerryBtn">🍽️ Съесть ягоду</button>
+        <button id="drinkWaterBtn">🚰 Выпить воду</button>
+    </div>
+
+    <div class="controls-arrows">
+        <button class="arrow-btn arrow-up" data-dir="up">▲</button>
+        <button class="arrow-btn arrow-left" data-dir="left">◀</button>
+        <button class="arrow-btn arrow-down" data-dir="down">▼</button>
+        <button class="arrow-btn arrow-right" data-dir="right">▶</button>
+    </div>
+
+    <div id="harvestProgress" class="harvest-progress" style="display:none">
+        🪓 Добыча: <span id="harvestResourceName"></span>
+        <div class="progress-bar"><div id="harvestProgressFill" class="progress-fill"></div></div>
+    </div>
+
+    <div class="warning" id="warningMsg"></div>
+    <div class="connection-status" id="status">🟢 Подключение...</div>
+</div>
+
+<script>
+    let ws = null;
+    let currentPlayerId = null;
+    let gameState = { players: {}, cells: {} };
+    let harvestInterval = null;
+
+    const terrainEmoji = { 'forest': '🌲🌳', 'plain': '🌾', 'water': '💧🌊' };
+    const terrainColor = { 'forest': '#2a5a2a', 'plain': '#5a8a3a', 'water': '#3a6a8a' };
+
+    function connect() {
+        const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+        ws = new WebSocket(`${protocol}//${window.location.host}/ws`);
+
+        ws.onopen = () => {
+            document.getElementById('status').innerHTML = '🟢 Соединение установлено';
+            document.getElementById('status').style.color = '#aaffaa';
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.currentPlayerId) currentPlayerId = data.currentPlayerId;
+            gameState.players = data.players || {};
+            gameState.cells = data.cells || {};
+            updateUI();
+        };
+
+        ws.onerror = () => {
+            document.getElementById('status').innerHTML = '🔴 Ошибка соединения';
+            document.getElementById('status').style.color = '#ffaaaa';
+        };
+
+        ws.onclose = () => {
+            document.getElementById('status').innerHTML = '🔴 Отключено. Переподключение...';
+            setTimeout(connect, 3000);
+        };
+    }
+
+    function sendMessage(type, payload) {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ type, payload }));
+        }
+    }
+
+    function move(direction) { sendMessage('move', { direction }); }
+    function harvest(resource) { sendMessage('harvest', { resource }); }
+    function build(building) { sendMessage('build', { building }); }
+    function eat(resource) { sendMessage('eat', { resource }); }
+    function drink(resource) { sendMessage('drink', { resource }); }
+
+    function startHarvestWithProgress(resource, resourceName) {
+        document.getElementById('harvestResourceName').innerText = resourceName;
+        document.getElementById('harvestProgress').style.display = 'block';
+        
+        let progress = 0;
+        if (harvestInterval) clearInterval(harvestInterval);
+        
+        harvestInterval = setInterval(() => {
+            progress += 10;
+            document.getElementById('harvestProgressFill').style.width = progress + '%';
+            if (progress >= 100) {
+                clearInterval(harvestInterval);
+                harvestInterval = null;
+                document.getElementById('harvestProgress').style.display = 'none';
+            }
+        }, 300); // 3 секунды = 10 шагов по 300мс
+        
+        harvest(resource);
+    }
+
+    function updateUI() {
+        if (!currentPlayerId) return;
+        
+        const player = gameState.players[currentPlayerId];
+        if (!player) return;
+        
+        const cellKey = `${player.x},${player.y}`;
+        const cell = gameState.cells[cellKey];
+        
+        if (cell) {
+            document.getElementById('cellPos').innerText = `${player.x},${player.y}`;
+            document.getElementById('terrainType').innerText = cell.terrainType;
+            document.getElementById('cellFill').innerText = cell.fill;
+            document.getElementById('playersCount').innerText = cell.players ? cell.players.length : 0;
+            const hasCampfire = cell.buildings && cell.buildings['campfire'];
+            document.getElementById('hasCampfire').innerHTML = hasCampfire ? '✅' : '❌';
+        }
+        
+        if (player.inventory) {
+            document.getElementById('invWood').innerText = player.inventory.wood || 0;
+            document.getElementById('invStone').innerText = player.inventory.stone || 0;
+            document.getElementById('invBerry').innerText = player.inventory.berry || 0;
+            document.getElementById('invWater').innerText = player.inventory.water || 0;
+        }
+        
+        if (player.stats) {
+            document.getElementById('hunger').innerText = player.stats.hunger || 0;
+            document.getElementById('thirst').innerText = player.stats.thirst || 0;
+            document.getElementById('energy').innerText = player.stats.energy || 0;
+            document.getElementById('attention').innerText = player.stats.attention || 0;
+            document.getElementById('hungerBar').style.width = (player.stats.hunger || 0) + '%';
+            document.getElementById('thirstBar').style.width = (player.stats.thirst || 0) + '%';
+            document.getElementById('energyBar').style.width = (player.stats.energy || 0) + '%';
+            document.getElementById('attentionBar').style.width = (player.stats.attention || 0) + '%';
+        }
+        
+        renderGrid();
+    }
+    
+    function renderGrid() {
+        const grid = document.getElementById('grid');
+        grid.innerHTML = '';
+        
+        for (let y = 0; y < 10; y++) {
+            for (let x = 0; x < 10; x++) {
+                const cellKey = `${x},${y}`;
+                const cell = gameState.cells[cellKey];
+                const isCurrent = (currentPlayerId && 
+                    gameState.players[currentPlayerId] && 
+                    gameState.players[currentPlayerId].x === x && 
+                    gameState.players[currentPlayerId].y === y);
+                
+                const div = document.createElement('div');
+                div.className = 'cell';
+                if (isCurrent) div.classList.add('current');
+                div.style.backgroundColor = cell ? terrainColor[cell.terrainType] || '#3a5a3a' : '#3a5a3a';
+                
+                const iconSpan = document.createElement('div');
+                iconSpan.className = 'terrain-icon';
+                iconSpan.innerText = cell ? (terrainEmoji[cell.terrainType] || '🌍') : '🌍';
+                div.appendChild(iconSpan);
+                
+                const infoSpan = document.createElement('div');
+                infoSpan.className = 'cell-info';
+                if (cell && cell.terrainType !== 'water') {
+                    infoSpan.innerText = `🪵${cell.woodLeft||0} 🪨${cell.stoneLeft||0} 🍓${cell.berryLeft||0}`;
+                } else if (cell && cell.terrainType === 'water') {
+                    infoSpan.innerText = `💧${cell.waterLeft||0}`;
+                }
+                div.appendChild(infoSpan);
+                
+                if (cell && cell.buildings && cell.buildings['campfire']) {
+                    const fireSpan = document.createElement('div');
+                    fireSpan.className = 'campfire-icon';
+                    fireSpan.innerText = '🔥';
+                    div.appendChild(fireSpan);
+                }
+                
+                grid.appendChild(div);
+            }
+        }
+    }
+
+    document.getElementById('harvestWoodBtn').onclick = () => startHarvestWithProgress('wood', 'Древесина');
+    document.getElementById('harvestStoneBtn').onclick = () => startHarvestWithProgress('stone', 'Камень');
+    document.getElementById('harvestBerryBtn').onclick = () => startHarvestWithProgress('berry', 'Ягоды');
+    document.getElementById('harvestWaterBtn').onclick = () => startHarvestWithProgress('water', 'Вода');
+    document.getElementById('buildCampfireBtn').onclick = () => build('campfire');
+    document.getElementById('eatBerryBtn').onclick = () => eat('berry');
+    document.getElementById('drinkWaterBtn').onclick = () => drink('water');
+    
+    document.querySelectorAll('.arrow-btn').forEach(btn => {
+        btn.onclick = () => move(btn.dataset.dir);
+    });
+
+    window.addEventListener('keydown', (e) => {
+        switch(e.key) {
+            case 'ArrowUp': move('up'); break;
+            case 'ArrowDown': move('down'); break;
+            case 'ArrowLeft': move('left'); break;
+            case 'ArrowRight': move('right'); break;
+            case 'w': case 'W': move('up'); break;
+            case 's': case 'S': move('down'); break;
+            case 'a': case 'A': move('left'); break;
+            case 'd': case 'D': move('right'); break;
+            case 'f': case 'F': build('campfire'); break;
+            case 'e': case 'E': eat('berry'); break;
+        }
+    });
+
+    connect();
+</script>
+</body>
+</html>

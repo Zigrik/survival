@@ -1,0 +1,21 @@
+{
+    "world_size": 10,
+    "tick_interval_seconds": 2,
+    "respawn_interval_seconds": 10,
+    "max_cell_fill": 100,
+    "wildness_threshold": 60,
+    
+    "hunger": {
+        "decay_per_hour": 1,
+        "start_value": 80,
+        "critical_threshold": 20,
+        "death_minutes_at_zero": 30
+    },
+    "thirst": {
+        "decay_per_hour": 2,
+        "start_value": 80,
+        "critical_threshold": 20,
+        "death_minutes_at_zero": 30
+    },
+    "hour_minutes_real": 5
+}

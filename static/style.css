@@ -1,0 +1,160 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1a2a1a;
+    color: #eee;
+    margin: 0;
+    padding: 20px;
+}
+
+#authPanel {
+    text-align: center;
+    margin-top: 100px;
+}
+
+#authPanel input {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    width: 200px;
+    font-size: 16px;
+}
+
+#authPanel button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background: #4a7a4a;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#langSelect {
+    margin-bottom: 20px;
+}
+
+.lang-btn {
+    padding: 5px 15px;
+    margin: 0 5px;
+    font-size: 14px;
+}
+
+#gamePanel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+canvas {
+    border: 2px solid #8b5a2b;
+    background: #2b4f2b;
+    cursor: pointer;
+    flex: 1;
+    min-width: 800px;
+}
+
+#infoBar {
+    background: #2a2a1a;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    gap: 20px;
+    font-size: 18px;
+    align-items: center;
+}
+
+.small-btn {
+    padding: 5px 10px;
+    font-size: 14px;
+    background: #4a6a4a;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+#inventoryPanel {
+    background: #2a2a1a;
+    padding: 10px;
+    border-radius: 5px;
+    width: 220px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#inventoryPanel ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#inventoryPanel li {
+    padding: 5px;
+    border-bottom: 1px solid #4a4a2a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#inventoryPanel li button {
+    font-size: 10px;
+    padding: 2px 6px;
+    background: #6a4a2a;
+}
+
+#craftPanel, #poisonPanel {
+    background: #2a2a1a;
+    padding: 10px;
+    border-radius: 5px;
+    width: 260px;
+}
+
+#craftPanel button, #poisonPanel button {
+    display: block;
+    width: 100%;
+    margin: 5px 0;
+    padding: 8px;
+    background: #4a6a4a;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#craftPanel button:hover, #poisonPanel button:hover {
+    background: #6a8a6a;
+}
+
+#craftStatus {
+    margin-top: 10px;
+    padding: 5px;
+    background: #1a1a0a;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+#collectMenu, #socialMenu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #2a2a2a;
+    border: 2px solid gold;
+    padding: 15px;
+    border-radius: 8px;
+    z-index: 100;
+    min-width: 200px;
+}
+
+#collectMenu button, #socialMenu button {
+    display: block;
+    width: 100%;
+    margin: 5px 0;
+    padding: 8px;
+    background: #4a4a6a;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#collectMenu button:hover, #socialMenu button:hover {
+    background: #6a6a8a;
+}

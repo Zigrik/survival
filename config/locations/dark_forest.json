@@ -1,0 +1,30 @@
+{
+  "name_key": "dark_forest",
+  "biome": "dark_forest",
+  "width": 100,
+  "ground": {
+    "default_tile": "dark_soil",
+    "tiles": {
+      "20": "water",
+      "21": "water",
+      "22": "water"
+    }
+  },
+  "objects": [
+    { "x": 10, "layer": "front", "type_id": "mushroom", "stage": 2, "stage_timer": 0 },
+    { "x": 45, "layer": "back", "type_id": "oak", "stage": 3, "stage_timer": 0 },
+    { "x": 50, "layer": "front", "type_id": "berry_bush", "stage": 3, "stage_timer": 0 },
+    { "x": 85, "layer": "front", "type_id": "pine", "stage": 4, "stage_timer": 0 }
+  ],
+  "decors": [
+    { "x": 15, "type": "dead_tree" },
+    { "x": 60, "type": "dark_cliff" }
+  ],
+  "next_location": "",
+  "previous_location": "weeping_spring.json",
+  "transition_x": 0,
+  "day_night_cycle_seconds": 600,
+  "spawn_schedule": "43",
+  "max_boars": 4,
+  "max_hares": 6
+}

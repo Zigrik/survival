@@ -1,0 +1,17 @@
+{
+  "items": [
+    { "id": "wood", "stackable": true, "max_stack": 99, "weight": 1, "food_value": 0, "water_value": 0, "poisonous": false },
+    { "id": "stone", "stackable": true, "max_stack": 99, "weight": 2, "food_value": 0, "water_value": 0, "poisonous": false },
+    { "id": "mushroom", "stackable": true, "max_stack": 50, "weight": 0.5, "food_value": 5, "water_value": 2, "poisonous": false },
+    { "id": "rotten_mushroom", "stackable": true, "max_stack": 50, "weight": 0.5, "food_value": -10, "water_value": -5, "poisonous": true },
+    { "id": "berry", "stackable": true, "max_stack": 99, "weight": 0.3, "food_value": 3, "water_value": 4, "poisonous": false },
+    { "id": "stick", "stackable": true, "max_stack": 99, "weight": 0.5, "food_value": 0, "water_value": 0, "poisonous": false },
+    { "id": "acorn", "stackable": true, "max_stack": 99, "weight": 0.4, "food_value": 2, "water_value": 1, "poisonous": false },
+    { "id": "leaf", "stackable": true, "max_stack": 99, "weight": 0.2, "food_value": 0, "water_value": 0, "poisonous": false },
+    { "id": "rotten_wood", "stackable": true, "max_stack": 99, "weight": 1.5, "food_value": -5, "water_value": 0, "poisonous": true },
+    { "id": "poison", "stackable": true, "max_stack": 10, "weight": 0.5, "food_value": -30, "water_value": -20, "poisonous": true },
+    { "id": "meat", "stackable": true, "max_stack": 50, "weight": 0.8, "food_value": 15, "water_value": 5, "poisonous": false },
+    { "id": "leather", "stackable": true, "max_stack": 50, "weight": 1, "food_value": 0, "water_value": 0, "poisonous": false },
+    { "id": "fur", "stackable": true, "max_stack": 50, "weight": 0.5, "food_value": 0, "water_value": 0, "poisonous": false }
+  ]
+}

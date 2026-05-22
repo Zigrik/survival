@@ -1,0 +1,93 @@
+{
+  "object_types": [
+    {
+      "id": "oak",
+      "category": "tree",
+      "stages": [
+        { "name_key": "oak_sapling", "duration_seconds": 600, "interactions": [] },
+        { "name_key": "oak_young", "duration_seconds": 1200, "interactions": [] },
+        { "name_key": "oak_mature", "duration_seconds": 0, "interactions": ["chop_wood", "pick_acorn"] },
+        { "name_key": "oak_old", "duration_seconds": 0, "interactions": ["chop_wood", "pick_acorn"] }
+      ]
+    },
+    {
+      "id": "berry_bush",
+      "category": "bush",
+      "stages": [
+        { "name_key": "bush_sapling", "duration_seconds": 300, "interactions": [] },
+        { "name_key": "bush_young", "duration_seconds": 600, "interactions": [] },
+        { "name_key": "bush_ripe", "duration_seconds": 900, "interactions": ["pick_berry"] },
+        { "name_key": "bush_old", "duration_seconds": 0, "interactions": ["pick_berry"] }
+      ]
+    },
+    {
+      "id": "mushroom",
+      "category": "fungus",
+      "stages": [
+        { "name_key": "mushroom_small", "duration_seconds": 180, "interactions": [] },
+        { "name_key": "mushroom_ripe", "duration_seconds": 600, "interactions": ["pick_mushroom"] },
+        { "name_key": "mushroom_rotten", "duration_seconds": 300, "interactions": ["pick_rotten_mushroom"] }
+      ]
+    },
+    {
+      "id": "pine",
+      "category": "tree",
+      "stages": [
+        { "name_key": "pine_sapling", "duration_seconds": 400, "interactions": [] },
+        { "name_key": "pine_young", "duration_seconds": 800, "interactions": ["pick_stick"] },
+        { "name_key": "pine_mature", "duration_seconds": 0, "interactions": ["chop_wood"] },
+        { "name_key": "pine_old", "duration_seconds": 0, "interactions": ["chop_wood"] },
+        { "name_key": "pine_withered", "duration_seconds": 600, "interactions": ["pick_rotten_wood"] }
+      ]
+    },
+    {
+      "id": "campfire",
+      "category": "construction",
+      "stages": [
+        { "name_key": "campfire_lit", "duration_seconds": 0, "interactions": ["cook_food", "extinguish"] }
+      ]
+    },
+    {
+      "id": "chest",
+      "category": "storage",
+      "stages": [
+        { "name_key": "chest_closed", "duration_seconds": 0, "interactions": ["open_chest"] }
+      ]
+    },
+    {
+      "id": "hut",
+      "category": "building",
+      "stages": [
+        { "name_key": "hut_standing", "duration_seconds": 0, "interactions": ["enter_hut", "sleep"] }
+      ]
+    }
+  ],
+  "animals": [
+    {
+      "id": "boar",
+      "name_key": "boar",
+      "hp": 30,
+      "speed_walk": 1.5,
+      "speed_run": 4.0,
+      "damage": 8,
+      "preferred_food": ["acorn", "mushroom"],
+      "aggressive": true,
+      "flee_distance": 0,
+      "attack_distance": 1.5,
+      "sleep_chance": 0.05
+    },
+    {
+      "id": "hare",
+      "name_key": "hare",
+      "hp": 10,
+      "speed_walk": 2.0,
+      "speed_run": 4.5,
+      "damage": 0,
+      "preferred_food": ["berry", "mushroom"],
+      "aggressive": false,
+      "flee_distance": 10,
+      "attack_distance": 0,
+      "sleep_chance": 0.1
+    }
+  ]
+}
